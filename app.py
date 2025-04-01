@@ -187,6 +187,33 @@ custom_css = """
     color: #34495e;
     margin: 10px 0;
 }
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 15px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.loading-text {
+    color: #2c3e50;
+    font-size: 1.1em;
+    font-weight: 500;
+}
 """
 
 # Create the Gradio interface with enhanced UI
@@ -276,6 +303,12 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
                 output = gr.Markdown(
                     label="Generated Response(s)",
                     show_label=True,
+                    value="Your generated responses will appear here...",  # Add default value
+                )
+                loading_status = gr.Markdown(
+                    value="",
+                    show_label=False,
+                    elem_classes="loading"
                 )
     
     gr.Markdown(
@@ -307,26 +340,23 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
         elem_classes="description"
     )
     
-    # Add examples
-    gr.Examples(
-        examples=[
-            ["What is machine learning?"],
-            ["Write a short story about a robot learning to paint."],
-            ["Explain quantum computing in simple terms."],
-            ["Write a poem about artificial intelligence."],
-            ["What is deep learning?"],
-            ["Write a story about a time-traveling smartphone."],
-            ["How does neural network training work?"],
-            ["Write a fairy tale about a computer learning to dream."],
-            ["What is the difference between supervised and unsupervised learning?"],
-            ["Create a story about an AI becoming an artist."]
-        ],
-        inputs=prompt
-    )
+    def generate_with_status(*args):
+        # Show loading status
+        loading_status.value = """
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Generating responses... Please wait...</div>
+        </div>
+        """
+        # Generate response
+        result = generate_response(*args)
+        # Clear loading status
+        loading_status.value = ""
+        return result
     
     # Connect the interface
     generate_btn.click(
-        fn=generate_response,
+        fn=generate_with_status,
         inputs=[
             prompt,
             max_length,
