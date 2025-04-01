@@ -1,5 +1,5 @@
 import gradio as gr
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from rich.console import Console
 import time
@@ -10,22 +10,12 @@ console = Console()
 # Load the model and tokenizer with the same configuration as training
 console.print("[bold green]Loading model and tokenizer...[/bold green]")
 
-# Configure 4-bit quantization with memory optimizations
-quantization_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_quant_storage=torch.float16,
-)
-
-# Load model with quantization and memory optimizations
+# Load model with memory optimizations
 model = AutoModelForCausalLM.from_pretrained(
     "./fine-tuned-model",
-    quantization_config=quantization_config,
     device_map="auto",
     trust_remote_code=True,
-    torch_dtype=torch.float16,
+    torch_dtype=torch.float16,  # Use float16 for memory efficiency
 )
 tokenizer = AutoTokenizer.from_pretrained("./fine-tuned-model")
 tokenizer.pad_token = tokenizer.eos_token
