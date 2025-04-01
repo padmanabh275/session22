@@ -131,6 +131,62 @@ custom_css = """
     border-radius: 8px;
     margin: 10px 0;
 }
+.prompt-box {
+    background-color: #ffffff;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.prompt-box label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    display: block;
+}
+.prompt-box textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 1em;
+    line-height: 1.5;
+}
+.output-box {
+    background-color: #ffffff;
+    border: 2px solid #2ecc71;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.output-box label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: block;
+}
+.output-box .markdown {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+.output-box h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-top: 20px;
+}
+.output-box p {
+    line-height: 1.6;
+    color: #34495e;
+    margin: 10px 0;
+}
 """
 
 # Create the Gradio interface with enhanced UI
@@ -146,12 +202,13 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
     
     with gr.Row():
         with gr.Column(scale=2):
-            prompt = gr.Textbox(
-                label="Prompt",
-                placeholder="Enter your prompt here...",
-                lines=3,
-                show_label=True,
-            )
+            with gr.Column(elem_classes="prompt-box"):
+                prompt = gr.Textbox(
+                    label="Enter Your Prompt Here",
+                    placeholder="Type your prompt here... (e.g., 'What is machine learning?' or 'Write a story about a robot learning to paint')",
+                    lines=5,
+                    show_label=True,
+                )
             
             with gr.Row():
                 with gr.Column():
@@ -212,13 +269,14 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
                 info="Toggle to show responses from both base and fine-tuned models"
             )
             
-            generate_btn = gr.Button("Generate", variant="primary")
+            generate_btn = gr.Button("Generate", variant="primary", size="large")
         
         with gr.Column(scale=3):
-            output = gr.Markdown(
-                label="Generated Response(s)",
-                show_label=True,
-            )
+            with gr.Column(elem_classes="output-box"):
+                output = gr.Markdown(
+                    label="Generated Response(s)",
+                    show_label=True,
+                )
     
     gr.Markdown(
         """
