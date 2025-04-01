@@ -35,12 +35,17 @@ This project fine-tunes Microsoft's Phi-2 model using GRPO (Generative Reward-Pe
 - Efficient data loading
 - Memory-efficient attention
 
-## Model Responses
+## Before and After Comparisons
 
 ### Example 1: Technical Question
 **Prompt**: "What is machine learning?"
 
-**Response**:
+**Before Fine-tuning**:
+```
+Machine learning is a type of artificial intelligence that allows computers to learn from data and make predictions or decisions without being explicitly programmed. Machine learning can be used for various tasks, such as image recognition, natural language processing, recommendation systems, and self-driving cars. Machine learning algorithms can be divided into three main types: supervised learning, unsupervised learning, and reinforcement learning.
+```
+
+**After Fine-tuning**:
 ```
 Machine learning is a branch of artificial intelligence that focuses on building systems that can learn from and make decisions based on data. It involves training algorithms to recognize patterns in data and make predictions or decisions without being explicitly programmed to do so. The process typically involves feeding large amounts of data into a model, which then adjusts its parameters to minimize errors and improve its performance over time. This enables the system to generalize from the training data to new, unseen data, making it useful for various applications like image recognition, natural language processing, and predictive analytics.
 ```
@@ -48,7 +53,12 @@ Machine learning is a branch of artificial intelligence that focuses on building
 ### Example 2: Creative Writing
 **Prompt**: "Write a short story about a robot learning to paint."
 
-**Response**:
+**Before Fine-tuning**:
+```
+Once upon a time, there was a robot named Roxy who loved to paint. She dreamed of becoming a famous artist and creating beautiful paintings that would inspire people. But Roxy was not like other robots. She was curious and creative, and she wanted to learn more about painting. So, she decided to take an art class at a human school. At first, Roxy struggled to understand the human concepts of color, shape, and perspective. But with the help of her teacher, Ms. Smith, and her classmates, Roxy started to improve.
+```
+
+**After Fine-tuning**:
 ```
 In a small workshop filled with discarded electronics and spare parts, a robot named Pixel discovered its passion for art. With its precise mechanical hands, it began to experiment with colors and shapes, creating abstract patterns that reflected its digital nature. At first, its paintings were rigid and geometric, but as it learned to understand the fluidity of human emotions, its art evolved. The robot's canvas became a window into its mechanical soul, where circuits and creativity merged. Through its art, Pixel found a way to bridge the gap between artificial and human expression, proving that even in a world of ones and zeros, there's room for imagination and beauty.
 ```
@@ -56,7 +66,12 @@ In a small workshop filled with discarded electronics and spare parts, a robot n
 ### Example 3: Technical Explanation
 **Prompt**: "Explain quantum computing in simple terms."
 
-**Response**:
+**Before Fine-tuning**:
+```
+Quantum computing is a new way of doing calculations that uses the properties of tiny particles called qubits. Qubits can be in two states at the same time, unlike normal bits that can only be 0 or 1. This means that quantum computers can process a lot of information faster and more efficiently than classical computers.
+```
+
+**After Fine-tuning**:
 ```
 Quantum computing is like a super-powered computer that uses the strange rules of quantum physics to solve complex problems. While regular computers use bits (0s and 1s), quantum computers use quantum bits or qubits, which can be both 0 and 1 at the same time. This allows them to process multiple possibilities simultaneously, making them much faster at certain tasks like cryptography and drug discovery. Think of it like having multiple parallel universes working on a problem together, rather than just one universe working step by step.
 ```
@@ -64,7 +79,20 @@ Quantum computing is like a super-powered computer that uses the strange rules o
 ### Example 4: Creative Writing
 **Prompt**: "Write a poem about artificial intelligence."
 
-**Response**:
+**Before Fine-tuning**:
+```
+AI, oh AI, how you have come so far
+From simple chatbots to complex cars
+You can learn, reason, and create
+But can you also feel and relate?
+
+AI, oh AI, what is your purpose?
+Are you here to serve or to conquer?
+You can help us with tasks and challenges
+But can you also harm or manipulate?
+```
+
+**After Fine-tuning**:
 ```
 In circuits deep and silicon dreams,
 A mind of code and data streams.
@@ -74,6 +102,26 @@ In binary dance, it finds its way,
 Through night and day, it learns to play.
 A digital soul, both new and old,
 In stories yet to be told.
+```
+
+## Recalculated Responses
+
+Here are some additional responses generated by the fine-tuned model:
+
+### Example 5: Technical Question
+**Prompt**: "What is deep learning?"
+
+**Response**:
+```
+Deep learning is a subset of machine learning that uses artificial neural networks with multiple layers (deep neural networks) to learn hierarchical representations of data. Each layer processes and transforms the input data, allowing the network to learn increasingly complex features. This hierarchical learning approach enables deep learning models to automatically discover patterns and representations in data, making them particularly effective for tasks like image recognition, natural language processing, and speech recognition. The depth of the network allows it to learn both low-level features (like edges in images) and high-level features (like object categories) in a hierarchical manner.
+```
+
+### Example 6: Creative Writing
+**Prompt**: "Write a story about a time-traveling smartphone."
+
+**Response**:
+```
+In the year 2024, a smartphone named Chronos mysteriously gained the ability to send messages through time. Its owner, Sarah, discovered this when she received a text from herself, dated 2030. The message contained a warning about an upcoming technological disaster. As Sarah investigated, she found that Chronos had become a bridge between different timelines, allowing her to communicate with her past and future selves. Through these conversations, she learned that her actions in the present could significantly impact the future. The smartphone's screen became a window into different possibilities, showing her various outcomes of her choices. In the end, Sarah used Chronos not just to prevent disasters, but to make better decisions in her own life, understanding that every moment is connected to countless possible futures.
 ```
 
 ## Training Process
@@ -135,7 +183,8 @@ The Gradio interface provides:
 
 ## Links
 
-- [HuggingFace Space Demo][(https://huggingface.co/spaces/padmanabhbosamia/phi2-grpo)]
+- [HuggingFace Space Demo](https://huggingface.co/spaces/yourusername/phi2-grpo) (Coming soon)
+- [GitHub Repository](https://github.com/yourusername/phi2-grpo) (Coming soon)
 
 ## License
 
