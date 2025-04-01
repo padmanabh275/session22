@@ -135,8 +135,8 @@ The Gradio interface provides:
 
 ## Links
 
-- [HuggingFace Space Demo](https://huggingface.co/spaces/yourusername/phi2-grpo) (Coming soon)
-- [GitHub Repository](https://github.com/yourusername/phi2-grpo) (Coming soon)
+- [HuggingFace Space Demo]([https://huggingface.co/spaces/yourusername/phi2-grpo](https://huggingface.co/spaces/padmanabhbosamia/phi2-grpo))
+- - [GitHub Repository](https://github.com/yourusername/phi2-grpo) (Coming soon)
 
 ## License
 
