@@ -183,7 +183,7 @@ The Gradio interface provides:
 
 ## Links
 
-- [HuggingFace Space Demo]((https://huggingface.co/spaces/padmanabhbosamia/phi2-grpo)) 
+- [HuggingFace Space Demo](https://huggingface.co/spaces/padmanabhbosamia/phi2-grpo) 
   
 
 ## License
