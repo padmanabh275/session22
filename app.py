@@ -16,10 +16,21 @@ model = AutoModelForCausalLM.from_pretrained(
     device_map="auto",
     trust_remote_code=True,
     torch_dtype=torch.float16,  # Use float16 for memory efficiency
+    low_cpu_mem_usage=True,  # Add this for better memory handling
 )
 tokenizer = AutoTokenizer.from_pretrained("./fine-tuned-model")
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = 'left'
+
+# Load base model for before/after comparison
+console.print("[bold green]Loading base model for comparison...[/bold green]")
+base_model = AutoModelForCausalLM.from_pretrained(
+    "microsoft/phi-2",
+    device_map="auto",
+    trust_remote_code=True,
+    torch_dtype=torch.float16,
+    low_cpu_mem_usage=True,  # Add this for better memory handling
+)
 
 def generate_response(
     prompt,
@@ -29,6 +40,7 @@ def generate_response(
     num_generations=2,  # Match training num_generations
     repetition_penalty=1.1,
     do_sample=True,
+    show_comparison=True,  # New parameter for comparison toggle
 ):
     try:
         # Get the device of the model
@@ -40,7 +52,7 @@ def generate_response(
         # Move inputs to the same device as the model
         inputs = {k: v.to(device) for k, v in inputs.items()}
         
-        # Generate response
+        # Generate response from fine-tuned model
         with torch.no_grad():  # Disable gradient computation
             outputs = model.generate(
                 **inputs,
@@ -60,7 +72,35 @@ def generate_response(
             response = tokenizer.decode(output, skip_special_tokens=True)
             responses.append(response)
         
-        return "\n\n---\n\n".join(responses)
+        fine_tuned_response = "\n\n---\n\n".join(responses)
+        
+        if show_comparison:
+            # Generate response from base model
+            with torch.no_grad():
+                base_outputs = base_model.generate(
+                    **inputs,
+                    max_new_tokens=max_length,
+                    do_sample=do_sample,
+                    temperature=temperature,
+                    top_p=top_p,
+                    num_return_sequences=1,  # Only one for comparison
+                    repetition_penalty=repetition_penalty,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
+                )
+            
+            base_response = tokenizer.decode(base_outputs[0], skip_special_tokens=True)
+            
+            return f"""
+### Before Fine-tuning (Base Model)
+{base_response}
+
+### After Fine-tuning
+{fine_tuned_response}
+"""
+        else:
+            return fine_tuned_response
+            
     except Exception as e:
         console.print(f"[bold red]Error during generation: {str(e)}[/bold red]")
         return f"Error: {str(e)}"
@@ -84,6 +124,12 @@ custom_css = """
     color: #34495e;
     line-height: 1.6;
     margin-bottom: 20px;
+}
+.comparison {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
 }
 """
 
@@ -160,12 +206,17 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
                         info="Enable/disable sampling for deterministic output"
                     )
             
+            show_comparison = gr.Checkbox(
+                value=True,
+                label="Show Before/After Comparison",
+                info="Toggle to show responses from both base and fine-tuned models"
+            )
+            
             generate_btn = gr.Button("Generate", variant="primary")
         
         with gr.Column(scale=3):
-            output = gr.Textbox(
+            output = gr.Markdown(
                 label="Generated Response(s)",
-                lines=10,
                 show_label=True,
             )
     
@@ -174,10 +225,26 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
         ### Example Prompts
         Try these example prompts to test the model:
         
-        1. **Technical Question**: "What is machine learning?"
-        2. **Creative Writing**: "Write a short story about a robot learning to paint."
-        3. **Technical Explanation**: "Explain quantum computing in simple terms."
-        4. **Creative Writing**: "Write a poem about artificial intelligence."
+        1. **Technical Questions**:
+           - "What is machine learning?"
+           - "What is deep learning?"
+           - "What is the difference between supervised and unsupervised learning?"
+        
+        2. **Creative Writing**:
+           - "Write a short story about a robot learning to paint."
+           - "Write a story about a time-traveling smartphone."
+           - "Write a fairy tale about a computer learning to dream."
+           - "Create a story about an AI becoming an artist."
+        
+        3. **Technical Explanations**:
+           - "How does neural network training work?"
+           - "Explain quantum computing in simple terms."
+           - "What is transfer learning?"
+        
+        4. **Creative Tasks**:
+           - "Write a poem about artificial intelligence."
+           - "Write a poem about the future of technology."
+           - "Create a story about a robot learning to dream."
         """,
         elem_classes="description"
     )
@@ -188,7 +255,13 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
             ["What is machine learning?"],
             ["Write a short story about a robot learning to paint."],
             ["Explain quantum computing in simple terms."],
-            ["Write a poem about artificial intelligence."]
+            ["Write a poem about artificial intelligence."],
+            ["What is deep learning?"],
+            ["Write a story about a time-traveling smartphone."],
+            ["How does neural network training work?"],
+            ["Write a fairy tale about a computer learning to dream."],
+            ["What is the difference between supervised and unsupervised learning?"],
+            ["Create a story about an AI becoming an artist."]
         ],
         inputs=prompt
     )
@@ -203,7 +276,8 @@ with gr.Blocks(css=custom_css, theme=gr.themes.Soft()) as demo:
             top_p,
             num_generations,
             repetition_penalty,
-            do_sample
+            do_sample,
+            show_comparison
         ],
         outputs=output
     )
